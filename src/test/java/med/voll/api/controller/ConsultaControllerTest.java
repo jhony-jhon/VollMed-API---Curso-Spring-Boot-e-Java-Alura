@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
-class ConsultaControllerTest {
+public class ConsultaControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -54,7 +53,8 @@ class ConsultaControllerTest {
 
     @Test
     @DisplayName("Deveria devolver código http 200 quando informações estão válidas.")
-    @WithMockUser //simula um usuário logado essa notação do Spring
+    @WithMockUser
+        //simula um usuário logado essa notação do Spring
     void agendar_cenario2() throws Exception {
         var data = LocalDateTime.now().plusHours(1);
         var especialidade = Especialidade.CARDIOLOGIA;

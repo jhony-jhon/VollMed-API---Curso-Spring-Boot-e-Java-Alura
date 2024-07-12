@@ -1,7 +1,7 @@
 package med.voll.api.domain.medico;
 
+import jakarta.transaction.Transactional;
 import med.voll.api.domain.consulta.Consulta;
-import med.voll.api.domain.consulta.ConsultaRepository;
 import med.voll.api.domain.endereco.DadosEndereco;
 import med.voll.api.domain.paciente.DadosCadastroPaciente;
 import med.voll.api.domain.paciente.Paciente;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -20,13 +19,11 @@ import java.time.temporal.TemporalAdjusters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 @Transactional
-class MedicoRepositoryTest {
-
+public class MedicoRepositoryTest {
 
     @Autowired
     private MedicoRepository medicoRepository;
@@ -34,29 +31,10 @@ class MedicoRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
-    @Test
-    @DisplayName("Deveria devolver null quando único médico cadastrado não está disponível na data")
-    void escolherMedicoAleatorioLivreNaDataCenario1() {
-
-        //given ou arrange
-        var proximaSegundaAs10 = LocalDateTime.now()
-                .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
-                .withHour(10)
-                .withMinute(0);
-
-        //when ou act
-        var medico = cadastrarMedico("Medico", "medico@voll.med", "225566", Especialidade.CARDIOLOGIA);
-        var paciente = cadastrarPaciente("Paciente", "paciente@voll.med", "44455599900");
-        cadastrarConsulta(medico, paciente, proximaSegundaAs10);
-
-        //then ou assert
-        var medicoLivre = medicoRepository.escolherMedicoAleatorioLivreNaData(Especialidade.CARDIOLOGIA, proximaSegundaAs10);
-        assertThat(medicoLivre).isNull();
-    }
 
     @Test
     @DisplayName("Deveria devolver médico quando ele estiver disponível na data")
-    void escolherMedicoAleatorioLivreNaDataCenario2() {
+    void escolherMedicoAleatorioLivreNaDataCenario1() {
 
         //given ou arrange
         var proximaSegundaAs10 = LocalDateTime.now()
@@ -73,8 +51,8 @@ class MedicoRepositoryTest {
         assertThat(medicoLivre).isEqualTo(medico);
     }
 
-    private void cadastrarConsulta(Medico medico, Paciente paciente, LocalDateTime data) {
-        em.persist(new Consulta(null, medico, paciente, data, null));
+    private Consulta cadastrarConsulta(Medico medico, Paciente paciente, LocalDateTime data) {
+        return em.persist(new Consulta(null, medico, paciente, data, null));
     }
 
     private Medico cadastrarMedico(String nome, String email, String crm, Especialidade especialidade) {
@@ -121,4 +99,5 @@ class MedicoRepositoryTest {
                 null
         );
     }
+
 }

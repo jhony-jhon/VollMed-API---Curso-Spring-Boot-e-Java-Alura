@@ -1,10 +1,7 @@
 package med.voll.api.domain.consulta;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.paciente.Paciente;
 
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@ToString
 public class Consulta {
 
     @Id
